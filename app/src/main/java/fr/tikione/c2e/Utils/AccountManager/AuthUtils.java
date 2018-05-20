@@ -1,4 +1,4 @@
-package fr.tikione.c2e.AccountManager;
+package fr.tikione.c2e.Utils.AccountManager;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;

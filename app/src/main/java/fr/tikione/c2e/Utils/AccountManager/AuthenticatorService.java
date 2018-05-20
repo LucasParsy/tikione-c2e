@@ -1,4 +1,4 @@
-package fr.tikione.c2e.AccountManager;
+package fr.tikione.c2e.Utils.AccountManager;
 
 import android.app.Service;
 import android.content.Intent;
@@ -11,7 +11,7 @@ import android.os.IBinder;
 public class AuthenticatorService extends Service {
         @Override
         public IBinder onBind(Intent intent) {
-            fr.tikione.c2e.AccountManager.Authenticator authenticator = new Authenticator(this);
+            fr.tikione.c2e.Utils.AccountManager.Authenticator authenticator = new Authenticator(this);
             return authenticator.getIBinder();
         }
     }

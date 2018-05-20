@@ -1,7 +1,7 @@
 package fr.tikione.c2e
 
 import android.util.Log
-import fr.tikione.c2e.Utils.TmpUtils.Companion.dateToString
+import compat.Tools
 import org.junit.Test
 
 import org.junit.Assert.*

@@ -24,7 +24,7 @@
 
         <!-- save credentials -->
         <service
-            android:name=".AccountManager.AuthenticatorService"
+            android:name=".Utils.AccountManager.AuthenticatorService"
             android:exported="false">
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator" />

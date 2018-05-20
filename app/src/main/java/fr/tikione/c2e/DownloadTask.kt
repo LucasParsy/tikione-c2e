@@ -6,7 +6,6 @@ import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import android.os.Environment
 import android.os.Handler
 import android.support.annotation.RequiresApi
 import android.support.v4.app.NotificationCompat
@@ -14,7 +13,7 @@ import android.support.v4.app.NotificationManagerCompat
 import com.github.salomonbrys.kodein.instance
 import compat.AssetService
 import compat.EndServiceException
-import fr.tikione.c2e.AccountManager.AuthUtils
+import fr.tikione.c2e.Utils.AccountManager.AuthUtils
 import fr.tikione.c2e.Utils.TmpUtils
 import fr.tikione.c2e.core.kodein
 import fr.tikione.c2e.core.model.web.Auth
@@ -23,8 +22,6 @@ import fr.tikione.c2e.core.service.web.AbstractReader
 import fr.tikione.c2e.core.service.web.scrap.CPCReaderService
 import org.jsoup.Jsoup
 import java.io.File
-import java.nio.file.Files.isDirectory
-
 
 
 class DownloadTask : IntentService("DownloadTask") {

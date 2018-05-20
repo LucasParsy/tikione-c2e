@@ -9,7 +9,7 @@ import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.widget.Toast
-import fr.tikione.c2e.AccountManager.AuthUtils
+import fr.tikione.c2e.Utils.AccountManager.AuthUtils
 import fr.tikione.c2e.Utils.TmpUtils
 import fr.tikione.c2e.Utils.TmpUtils.Companion.showError
 import kotlinx.android.synthetic.main.activity_main.*

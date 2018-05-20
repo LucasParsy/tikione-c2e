@@ -1,12 +1,11 @@
 package fr.tikione.c2e
 
 import android.app.Activity
-import android.content.Intent
 import android.os.AsyncTask
 import android.os.Bundle
 import android.view.View
 import com.github.salomonbrys.kodein.instance
-import fr.tikione.c2e.AccountManager.AuthUtils
+import fr.tikione.c2e.Utils.AccountManager.AuthUtils
 import fr.tikione.c2e.core.kodein
 import fr.tikione.c2e.core.model.web.Auth
 import fr.tikione.c2e.core.service.web.CPCAuthService
