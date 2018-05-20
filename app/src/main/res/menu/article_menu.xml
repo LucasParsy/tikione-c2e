@@ -1,0 +1,30 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+
+    <item
+        android:id="@+id/lightMode"
+        android:checked="false"
+        android:icon="@drawable/baseline_brightness_3_black_18dp"
+        android:title="a"
+        app:showAsAction="always" />
+
+
+    <item
+        android:id="@+id/textsizeMinus"
+        android:checkable="true"
+        android:checked="false"
+        android:icon="@drawable/character_minus"
+        android:title="b"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/textsizePlus"
+        android:checkable="false"
+        android:checked="false"
+        android:icon="@drawable/character_plus"
+        android:title="c"
+        app:showAsAction="always" />
+
+</menu>
