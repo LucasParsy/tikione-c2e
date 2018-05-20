@@ -3,6 +3,7 @@ package fr.tikione.c2e
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
 import com.android.volley.Response
+import compat.Tools
 import fr.tikione.c2e.Utils.Network.NetworkUtils
 import fr.tikione.c2e.Utils.TmpUtils
 import org.jsoup.nodes.Document
@@ -63,4 +64,19 @@ class ExampleInstrumentedTest {
                 })
         Thread.sleep(8000)
     }
+
+    @Test
+    fun createBase64Id()
+    {
+        val url = "https://www.canardpc.com/sites/default/files/2018-05/5943-poke06.jpg"
+        val pictureId = Tools.byteArrayToBase64(url.toByteArray())
+                .replace("=".toRegex(), "")
+                .replace(",".toRegex(), "")
+                .replace("\n".toRegex(), "")
+        val pictureBoxId = pictureId + "box"
+
+        println(pictureBoxId)
+    }
+
+
 }

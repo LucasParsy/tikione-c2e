@@ -340,6 +340,7 @@ class HtmlWriterServiceImpl : AbstractWriter(), HtmlWriterService {
                     val pictureId = byteArrayToBase64(picture.url!!.toByteArray())
                             .replace("=".toRegex(), "")
                             .replace(",".toRegex(), "")
+                            .replace("\n".toRegex(), "")
                     val pictureBoxId = pictureId + "box"
                     w.write("<div class='article-picture-box' id='$pictureBoxId'>\n")
                     w.write("<span class='article-picture'><img src='data:image/" + ext + ";base64," + picB64 +
