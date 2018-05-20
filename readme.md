@@ -16,6 +16,8 @@ vous pouvez installer l'apk fourni dans l'onglet releases, ou télécharger les 
 
 un magasine peut être visuellement indiqué comme téléchargé, alors qu'on a annulé son téléchargement.
 
+le magasine hs sur la création de jeux vidéo n'est pas listé dans l'application.
+
 ## à venir
 
 menu d'options, et crédits
