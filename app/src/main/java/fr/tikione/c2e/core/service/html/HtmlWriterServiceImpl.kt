@@ -29,12 +29,13 @@ class HtmlWriterServiceImpl : AbstractWriter(), HtmlWriterService {
     private var percentageInc: Float = 0.0f
     override var cancelDl: Boolean = false
 
-    private fun findFontAsBase64(): String {
+    private fun findFontAsBase64(dysfont: Boolean): String {
         val ttfs = File(".").listFiles { _, name ->
             name.toUpperCase().endsWith(".TTF")
         }
         return if (ttfs == null || ttfs.isEmpty()) {
-            resourceAsBase64("tmpl/html-export/style/RobotoSlab-Light.ttf")
+	    if (dysfont) resourceAsBase64("tmpl/html-export/style/OpenDyslexic2-Regular.ttf")
+            else resourceAsBase64("tmpl/html-export/style/RobotoSlab-Light.ttf")
         } else {
             log.info("utilisation de la police de caracteres {}", ttfs[0].absolutePath)
             fileAsBase64(ttfs[0], assetService.getAssetManager())
@@ -62,13 +63,13 @@ class HtmlWriterServiceImpl : AbstractWriter(), HtmlWriterService {
     }
 
     @Throws(IOException::class, EndServiceException::class)
-    override fun write(magazine: Magazine, file: File, incluePictures: Boolean, resize: String?, dark: Boolean, customCss: String?) {
+    override fun write(magazine: Magazine, file: File, incluePictures: Boolean, resize: String?, dark: Boolean, customCss: String?, dysfont: Boolean) {
         file.delete()
         if (file.exists()) {
             throw IOException("impossible d'ecraser le fichier : " + file.absolutePath)
         }
         val faviconBase64 = resourceAsBase64("tmpl/html-export/img/french_duck.png")
-        val fontRobotoBase64 = findFontAsBase64()
+        val fontRobotoBase64 = findFontAsBase64(dysfont)
         val cssDay = resourceAsStr("tmpl/html-export/style/day.css")
                 .replace("$\$robotoFont_base64$$", fontRobotoBase64)
         val cssNight = resourceAsStr("tmpl/html-export/style/night.css")
@@ -478,11 +479,16 @@ class HtmlWriterServiceImpl : AbstractWriter(), HtmlWriterService {
             """.trimIndent()
     }
 
-    override fun write(magazines: List<MagazineSummary>, file: File) {
+    override fun write(magazines: List<MagazineSummary>, file: File, dysfont: Boolean) {
         val faviconBase64 = resourceAsBase64("tmpl/html-export/img/french_duck.png")
-        val fontRobotoBase64 = findFontAsBase64()
+        val fontRobotoBase64 = findFontAsBase64(dysfont)
         var magazineList = ""
         val sortedMagazines = magazines.sortedWith(compareByDescending { it.number })
+
+	if (magazines.isEmpty()) {
+             return
+         }
+
         sortedMagazines.forEach { mag ->
             val sizeUnit = when {
                 mag.humanSize.endsWith("Mo") -> "Mo"

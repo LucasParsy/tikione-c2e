@@ -5,6 +5,7 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Build
 import android.os.Handler
 import android.support.annotation.RequiresApi
@@ -132,7 +133,8 @@ class DownloadTask : IntentService("DownloadTask") {
 
         val magazine = cpcReaderService.downloadMagazine(auth, magNumber)
         dlArticlesEnded = true;
-        writerService.write(magazine, output!!, incPictures, null, false, "")
+        val dysfont = this.getSharedPreferences("app", android.content.Context.MODE_PRIVATE).getBoolean("dysfont", false)
+        writerService.write(magazine, output!!, incPictures, null, false, "", dysfont)
         handler.removeCallbacksAndMessages(null)
         updateDlStatus(100.0f)
     }
