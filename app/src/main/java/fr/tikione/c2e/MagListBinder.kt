@@ -156,10 +156,15 @@ open class MagListBinder : ViewHolderBinder<MagasineInfo> {
             }
 
             if (data[holder.adapterPosition].downloaded) {
-                if (! TmpUtils.openMag(mag.number, act)) {
+                val intent = Intent(act, MagSummary::class.java)
+                intent.putExtra("magNum", mag.number)
+                act.startActivity(intent)
+                /*
+                if (!TmpUtils.openMag(mag.number, act)) {
                     createDlDialog(mag, act)
                     return@OnClickListener
                 }
+                */
             } else
                 createDlDialog(mag, act)
         }
