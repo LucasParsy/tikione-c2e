@@ -168,6 +168,58 @@ class HtmlWriterServiceImpl : AbstractWriter(), HtmlWriterService {
                 if (sizeInMb) "MB" else "KB")
     }
 
+
+    @Throws(IOException::class, EndServiceException::class)
+    fun writeMobileArticles(header: String, footer: String, magazine: Magazine,
+                            file: File, incluePictures: Boolean, resize: String?,
+                            dark: Boolean, customCss: String?, dysfont: Boolean) {
+
+
+        val headerDir = File(file, "headers")
+        if (!headerDir.exists() || !headerDir.isDirectory)
+            headerDir.mkdir()
+
+        val categories = ArrayList<SimpleMagCategory>()
+        for (category in magazine.toc) {
+            val articleList = ArrayList<SimpleMagArticle>()
+            for (tocItem in category.items) {
+                val article = SimpleMagArticle(tocItem.title!!)
+                val filename = article.filename
+                articleList.add(article)
+
+                continue
+
+                //todo: décommenter ligne en desssous: télécharger que quand dl images.
+                if (!tocItem.headerUrl.isNullOrBlank()) //&& incluePictures
+                {
+                   val bytes = downloadPicture(tocItem.headerUrl!!)
+                    val headImage = File(headerDir, "$filename.jpg")
+                    FileUtils.writeByteArrayToFile(headImage, bytes)
+                }
+
+                val articleFile = File(file, "$filename.html")
+                articleFile.createNewFile()
+
+                BufferedWriter(OutputStreamWriter(FileOutputStream(articleFile), StandardCharsets.UTF_8)).use { w ->
+                    w.write(header)
+                    w.write("<div "
+                            + "' class=\"article-title\">"
+                            + tocItem.title
+                            + " <a class='toc-ext-lnk article-ext-lnk' href='" + tocItem.url + "' target='_blank' title='Vers le site CanardPC - nouvelle page'>"
+                            + AbstractWriter.EXT_LNK
+                            + "</a></div>\n\n")
+                    tocItem.articles!!.forEach { article -> writeArticle(w, article, incluePictures, resize, magazine.authorsPicture) }
+                    w.write(footer)
+                }
+            }
+            categories.add(SimpleMagCategory(category.title!!, articleList))
+        }
+        val summaryFile = File(file, "sommaire")
+        TmpUtils.writeObjectFile(SimpleMagToc(magazine.edito!!.title!!, magazine.edito!!.content!!, categories), summaryFile)
+
+    }
+
+
     private fun writeEdito(w: Writer, edito: Edito?) {
         w.write(div("edito-container", mapOf<String?, String?>("id" to normalizeAnchorUrl("Edito")),
                 div("article-title", edito?.title)
@@ -306,27 +358,8 @@ class HtmlWriterServiceImpl : AbstractWriter(), HtmlWriterService {
                 if (picture.url != null && !picture.url!!.isEmpty()) {
                     log.info("recuperation de l'image {}", picture.url as String)
 
-                    var picBytes: ByteArray = ByteArray(0)
-                    var picDld: Boolean = false;
-                    while (!picDld) {
-                        try {
-                            if (cancelDl)
-                                throw EndServiceException()
-                            picBytes = IOUtils.toByteArray(URL(picture.url!!))
-                            picDld = true;
-                        } catch (e: IOException) {
-                            TimeUnit.MILLISECONDS.sleep(1000)
-                        }
-                    }
-                    TimeUnit.MILLISECONDS.sleep(250) // be nice with CanardPC website
+                    var picBytes = downloadPicture(picture.url!!)
                     var ext = "jpg"
-                    /*
-                    if (!isAndroid())
-                    {
-                        val magicmatch = Magic.getMagicMatch(picBytes)
-                        ext = magicmatch.extension
-                    }
-                    */
 
                     if (resize != null && !resize.isBlank()) {
                         val tmpSrc = "c2e.src.tmp.$ext"
@@ -364,6 +397,23 @@ class HtmlWriterServiceImpl : AbstractWriter(), HtmlWriterService {
             }
             w.write("</div>\n")
         }
+    }
+
+    private fun downloadPicture(url: String): ByteArray {
+        var picBytes: ByteArray = ByteArray(0)
+        var picDld: Boolean = false;
+        while (!picDld) {
+            try {
+                if (cancelDl)
+                    throw EndServiceException()
+                picBytes = IOUtils.toByteArray(URL(url))
+                picDld = true;
+            } catch (e: IOException) {
+                TimeUnit.MILLISECONDS.sleep(1000)
+            }
+        }
+        TimeUnit.MILLISECONDS.sleep(250) // be nice with CanardPC website
+        return picBytes
     }
 
     private fun writeArticleOpinion(w: Writer, article: Article) {
