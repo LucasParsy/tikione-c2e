@@ -65,6 +65,12 @@
         Veuillez vérifier vos paramètres internet</string>
     <string name="network_settings">Paramètres réseau</string>
 
+    <string name="mag_number">Canard PC n° %1$d</string>
+
+
+    <string name="edito_sample">
+         En 2012, Canard PC organisait sa première game jam, Make Something Horrible, dont les règles étaient simples : il fallait créer le jeu le plus nul, le plus affreux, le plus ridicule qui soit. Après une édition 2015 encore plus réussie, Make Something Horrible est de retour pour une troisième tournée en 2016, en partenariat avec le CNC (Centre National du Cinéma), mais ils ne le savent pas. L’année dernière, nous avions décidé d\'être plus ouverts et d\'accepter des jeux de meilleure qualité, tant qu\'ils étaient originaux ou idiots. Le problème, bougre d\'andouilles, c\'est que vous avez trop de talent, et qu\'on s\'est retrouvé avec d’authentiques bons jeux, qui n\'auraient pas eu à rougir au milieu d\'une vraie game jam. C\'est pourquoi nous avons souhaité cette année revenir aux fondamentaux : on veut du miteux, du pourlingue, du bricolé sous Paint.
+    </string>
 
 
 </resources>

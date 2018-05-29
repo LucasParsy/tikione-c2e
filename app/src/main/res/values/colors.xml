@@ -10,7 +10,18 @@
     <color name="background_material_lighter">#fafafa</color>
     <color name="transparent_black">#74000000</color>
     <color name="lighter_gray">#e3e3e3</color>
+    <color name="simple_gray">#bebebe</color>
     <color name="lighterter_gray">#f4f4f4</color>
     <color name="transparent_grey">#50616161</color>
-    <color name="darkerker_gray">#282828</color>
+    <color name="darkerker_gray">#1a2128</color>
+    <color name="darker_gray">#1f2a35</color>
+    <color name="dark_gray">#283645</color>
+
+
+    <color name="article_base">#d50000</color>
+    <color name="article_tests">#0d47a1</color>
+    <color name="article_avenir">#0288d1</color>
+    <color name="article_chantier">#f9a825</color>
+    <color name="article_hardware">#bdbdbd</color>
+    <color name="article_apart">#aa00ff</color>
 </resources>
