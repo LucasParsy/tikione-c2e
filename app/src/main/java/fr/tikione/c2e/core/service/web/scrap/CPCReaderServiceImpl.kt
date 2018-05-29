@@ -12,6 +12,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.util.*
 import java.util.concurrent.TimeUnit
+import java.util.regex.Pattern
 
 class CPCReaderServiceImpl : AbstractReader(), CPCReaderService {
 
@@ -154,19 +155,37 @@ class CPCReaderServiceImpl : AbstractReader(), CPCReaderService {
             tocCategory.title = title
         }
         elt.getElementsByTag("article").forEach { sheet ->
+
+            val url = CPC_BASE_URL + attr(sheet.getElementsByTag("a"), "href");
+            log.info("recuperation de l'article {}", url)
+            TimeUnit.MILLISECONDS.sleep(500) // be nice with CanardPC website
+
+            val doc = queryUrlWrapper(auth, url)
             tocCategory.items.add(TocItem(
                     sheet.text(),
-                    CPC_BASE_URL + attr(sheet.getElementsByTag("a"), "href"),
-                    extractArticles(auth, CPC_BASE_URL + attr(sheet.getElementsByTag("a"), "href"))))
+                    url,
+                    extractHeaderUrl(doc),
+                    extractArticles(doc)))
             downloadStatus += percentageInc
         }
         return tocCategory
     }
 
-    private fun extractArticles(auth: Auth, url: String): List<Article>? {
-        log.info("recuperation de l'article {}", url)
-        TimeUnit.MILLISECONDS.sleep(500) // be nice with CanardPC website
-        val doc = queryUrlWrapper(auth, url)
+    private fun extractHeaderUrl(doc: Document) : String
+    {
+        val attrname = "style"
+        val elems = doc.getElementsByClass("article-hero-image")
+        if (elems.size == 0 || !elems[0].hasAttr(attrname))
+            return ""
+        var url = elems[0].attr(attrname)
+
+        url = url.substring(url.indexOf("'") + 1);
+        url = url.substring(0, url.indexOf("'"));
+        url = CPC_BASE_URL + url
+        return url
+    }
+
+    private fun extractArticles(doc : Document): List<Article>? {
         val articles = cpcScraperService.extractBestArticles(doc)
         if (Tools.debug) {
             articles.forEach { article -> log.debug(article.toString()) }

@@ -5,6 +5,10 @@ import compat.Tools.Companion.byteArrayToBase64
 import compat.Tools.Companion.fileAsBase64
 import compat.Tools.Companion.readRemoteToBase64
 import compat.EndServiceException
+import fr.tikione.c2e.Utils.TmpUtils
+import fr.tikione.c2e.core.SimpleMagArticle
+import fr.tikione.c2e.core.SimpleMagCategory
+import fr.tikione.c2e.core.SimpleMagToc
 import fr.tikione.c2e.core.model.home.MagazineSummary
 import fr.tikione.c2e.core.model.web.*
 import fr.tikione.c2e.core.service.AbstractWriter
@@ -34,7 +38,7 @@ class HtmlWriterServiceImpl : AbstractWriter(), HtmlWriterService {
             name.toUpperCase().endsWith(".TTF")
         }
         return if (ttfs == null || ttfs.isEmpty()) {
-	    if (dysfont) resourceAsBase64("tmpl/html-export/style/OpenDyslexic2-Regular.ttf")
+            if (dysfont) resourceAsBase64("tmpl/html-export/style/OpenDyslexic2-Regular.ttf")
             else resourceAsBase64("tmpl/html-export/style/RobotoSlab-Light.ttf")
         } else {
             log.info("utilisation de la police de caracteres {}", ttfs[0].absolutePath)
@@ -64,10 +68,11 @@ class HtmlWriterServiceImpl : AbstractWriter(), HtmlWriterService {
 
     @Throws(IOException::class, EndServiceException::class)
     override fun write(magazine: Magazine, file: File, incluePictures: Boolean, resize: String?, dark: Boolean, customCss: String?, dysfont: Boolean) {
-        file.delete()
+        /*
         if (file.exists()) {
             throw IOException("impossible d'ecraser le fichier : " + file.absolutePath)
         }
+        */
         val faviconBase64 = resourceAsBase64("tmpl/html-export/img/french_duck.png")
         val fontRobotoBase64 = findFontAsBase64(dysfont)
         val cssDay = resourceAsStr("tmpl/html-export/style/day.css")
@@ -90,6 +95,9 @@ class HtmlWriterServiceImpl : AbstractWriter(), HtmlWriterService {
 
         if (incluePictures)
             countPictures(magazine.toc)
+
+        writeMobileArticles(header, footer, magazine, file, incluePictures, resize, dark, customCss, dysfont)
+        return;
         BufferedWriter(FileWriter(file)).use { w ->
             w.write(header)
 
@@ -485,9 +493,9 @@ class HtmlWriterServiceImpl : AbstractWriter(), HtmlWriterService {
         var magazineList = ""
         val sortedMagazines = magazines.sortedWith(compareByDescending { it.number })
 
-	if (magazines.isEmpty()) {
-             return
-         }
+        if (magazines.isEmpty()) {
+            return
+        }
 
         sortedMagazines.forEach { mag ->
             val sizeUnit = when {

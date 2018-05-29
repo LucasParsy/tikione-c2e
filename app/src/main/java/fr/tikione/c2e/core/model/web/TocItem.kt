@@ -7,14 +7,16 @@ class TocItem {
 
     var title: String? = null
     var url: String? = null
+    var headerUrl: String? = null
     var articles: List<Article>? = null
 
     constructor() {
     }
 
-    constructor(title: String?, url: String?, articles: List<Article>?) {
+    constructor(title: String?, url: String?, headerUrl : String?, articles: List<Article>?) {
         this.title = title
         this.url = url
+        this.headerUrl = headerUrl
         this.articles = articles
     }
 
