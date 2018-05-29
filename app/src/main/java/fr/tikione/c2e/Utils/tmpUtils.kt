@@ -13,7 +13,10 @@ import fr.tikione.c2e.R
 import java.io.*
 import android.support.v4.content.FileProvider
 import android.support.v7.app.AlertDialog
+import android.util.Log
 import android.widget.Toast
+import fr.tikione.c2e.core.SimpleMagArticle
+import fr.tikione.c2e.core.SimpleMagCategory
 
 
 class GenericFileProvider : FileProvider()
@@ -31,8 +34,8 @@ class TmpUtils {
                     + File.separator + context.getString(R.string.folder_name))
         }
 
-        fun <T> readObjectFile(filename: String, context: Context): T {
-            val file = File(context.filesDir, filename)
+
+        fun <T> readObjectFile(file: File): T {
             if (!(file.isFile && file.canRead()))
                 throw FileNotFoundException()
 
@@ -47,13 +50,22 @@ class TmpUtils {
             throw FileNotFoundException()
         }
 
-        fun <T> writeObjectFile(obj: T, filename: String, context: Context) {
+        fun <T> readObjectFile(filename: String, context: Context): T {
             val file = File(context.filesDir, filename)
+            return readObjectFile(file)
+        }
+
+        fun <T> writeObjectFile(obj: T, file: File) {
             val stream = FileOutputStream(file)
             val out = ObjectOutputStream(stream)
             out.writeObject(obj);
             out.flush()
             out.close()
+        }
+
+        fun <T> writeObjectFile(obj: T, filename: String, context: Context) {
+            val file = File(context.filesDir, filename)
+            writeObjectFile(obj, file)
         }
 
 
@@ -69,6 +81,13 @@ class TmpUtils {
             if (!array.isEmpty())
                 act.requestPermissions(array.toTypedArray(), PERMISSION_REQUEST_STORAGE)
             return array.isEmpty()
+        }
+
+        fun getColor(context: Context, name: Int) : Int
+        {
+            if (android.os.Build.VERSION.SDK_INT >= 23)
+                return context.getColor(name)
+            return context.resources.getColor(name)
         }
 
         @Suppress("UNUSED_ANONYMOUS_PARAMETER")

@@ -132,7 +132,11 @@ open class MagListRecycler : IRecycler<MagasineInfo>() {
         val dlFolder = TmpUtils.getFilesPath(context!!)
         val numDirFolder = File(dlFolder, num.toString())
         if (numDirFolder.exists() && numDirFolder.isDirectory)
+        {
+            val summ = File(numDirFolder,"sommaire")
+            if (summ.isFile && summ.canRead())
             return true
+        }
         return false
     }
 

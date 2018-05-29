@@ -143,15 +143,9 @@ class DownloadTask : IntentService("DownloadTask") {
     {
         var output = File("")
         try {
-            val dlFolder = File(TmpUtils.getFilesPath(this.baseContext), magNumber)
-            if (!dlFolder.exists())
-                dlFolder.mkdirs()
-            val filename = "mag.html"
-            output = File(dlFolder, filename)
-            if (!output.exists()) {
-                output.parentFile.mkdirs()
-                output.createNewFile()
-            }
+            output = File(TmpUtils.getFilesPath(this.baseContext), magNumber)
+            if (!output.exists())
+                output.mkdirs()
         } catch (e: Exception) {
             errorString = getString(R.string.invalid_permissions);
             updateDlStatus(-1.0f)
@@ -203,6 +197,15 @@ class DownloadTask : IntentService("DownloadTask") {
         manager.createNotificationChannel(channel)
     }
 
+    private fun deleteRecursive(file:File, root: Boolean = true)
+    {
+        if (file.isDirectory)
+            for (child in file.listFiles())
+                deleteRecursive(child, false)
+        if (file.name != "couv.jpg" && !root)
+            file.delete()
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         handler.removeCallbacksAndMessages(null)
@@ -214,15 +217,11 @@ class DownloadTask : IntentService("DownloadTask") {
         {
             cpcReaderService.cancelDl = true
             writerService.cancelDl = true
-            getFile()?.delete()
-            intent.putExtra("interrupted", true)
-            /*
-            if (fileOrDirectory.isDirectory())
-                for (child in fileOrDirectory.listFiles())
-                    deleteRecursive(child)
 
-            fileOrDirectory.delete()
-            */
+            intent.putExtra("interrupted", true)
+
+            val outputDir =  getFile()
+            deleteRecursive(outputDir!!)
         }
 
         if (!errorString.isBlank())

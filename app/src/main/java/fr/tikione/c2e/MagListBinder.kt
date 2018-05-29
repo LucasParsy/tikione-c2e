@@ -23,6 +23,7 @@ import android.util.Log
 import java.io.FileOutputStream
 import java.io.OutputStream
 import android.graphics.BitmapFactory
+import android.os.Bundle
 import android.support.v4.content.FileProvider
 
 
@@ -46,14 +47,13 @@ open class MagListBinder : ViewHolderBinder<MagasineInfo> {
 
         if (item.isMostRecent)
             return
-        if (item.downloaded) {
-            val dlFolder = TmpUtils.getFilesPath(holder.v.context)
-            val numDirFolder = File(dlFolder, item.number.toString())
-            val couv = File(numDirFolder, couvName)
-            if (couv.exists() && couv.isFile && couv.canRead()) {
-                val bit = BitmapFactory.decodeFile(couv.absolutePath)
-                setImages(bit, false, true, holder)
-            }
+
+        val dlFolder = TmpUtils.getFilesPath(holder.v.context)
+        val numDirFolder = File(dlFolder, item.number.toString())
+        val couv = File(numDirFolder, couvName)
+        if (couv.exists() && couv.isFile && couv.canRead()) {
+            val bit = BitmapFactory.decodeFile(couv.absolutePath)
+            setImages(bit, false, item.downloaded, holder)
         } else {
             var imageUrl: String;
             if (imageUrlMap.containsKey(item.number) && imageUrlMap[item.number]!!.isNotEmpty()) {
@@ -80,7 +80,7 @@ open class MagListBinder : ViewHolderBinder<MagasineInfo> {
         NetworkUtils.ImageRequest(holder.v.context, url,
                 Response.Listener { res ->
                     item.bitmap = res
-                    setImages(res, false, false, holder)
+                    setImages(res, false, item.downloaded, holder)
                 }, null)
     }
 
@@ -129,7 +129,7 @@ open class MagListBinder : ViewHolderBinder<MagasineInfo> {
     }
 
     fun buttonDlListener(mag: MagasineInfo, incPicture: Boolean, dialog: Dialog, act: MainActivity) {
-        act.downloadMag(mag.number, true);
+        act.downloadMag(mag.number, incPicture);
         dialog.dismiss()
         storeCoverOnDisk(mag, act)
         mag.downloaded = true;

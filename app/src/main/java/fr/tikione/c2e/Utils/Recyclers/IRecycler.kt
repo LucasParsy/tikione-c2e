@@ -132,8 +132,10 @@ abstract class IRecycler<T: Any> : Fragment() {
         super.onActivityCreated(savedInstanceState)
 
         val recycler = rootView.findViewById<RecyclerView>(recycleId)
-        adapter = Adapter(activity as Context, ArrayList(), layoutObjectId, binder!!)
-        recycler.adapter = adapter
+        if (binder != null) {
+            adapter = Adapter(activity as Context, ArrayList(), layoutObjectId, binder!!)
+            recycler.adapter = adapter
+        }
 
         if (savedInstanceState != null) {
             val json =  savedInstanceState.getString("json")

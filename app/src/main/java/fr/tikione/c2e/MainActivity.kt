@@ -34,6 +34,10 @@ class MainActivity : AppCompatActivity() {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
             TmpUtils.checkPermissions(this)
+
+
+        //val intent = Intent(this, javaClass::class.java)
+        //startActivity(intent)
     }
 
     fun logout(v: View) {
@@ -110,6 +114,7 @@ class MainActivity : AppCompatActivity() {
                     stopService(Intent(this, DownloadTask::class.java))
                     dlStarted = false
                     Toast.makeText(this@MainActivity, getString(R.string.stop_dl_done), Toast.LENGTH_LONG).show()
+                    progressLayout.visibility = View.INVISIBLE
                 }
                 .setNegativeButton(getString(R.string.no), null)
         builder.create().show()
